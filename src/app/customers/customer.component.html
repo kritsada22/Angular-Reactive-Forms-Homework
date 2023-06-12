@@ -378,9 +378,86 @@
                 />
               </div>
             </div>
+
+            <div formArrayName="residents">
+              <div
+                [formGroupName]="j"
+                *ngFor="
+                  let residentsArr of getResidents(address);
+                  let j = index
+                "
+              >
+                <div class="form-group row mb-2">
+                  <label
+                    class="col-md-2 col-form-label"
+                    attr.for="{{ 'residentsId' + j }}"
+                    >Name</label
+                  >
+                  <div class="col-md-8">
+                    <input
+                      class="form-control"
+                      id="{{ 'residentsId' + j }}"
+                      type="text"
+                      placeholder="Residents Name"
+                      formControlName="residentsName"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group row mb-2">
+                  <label class="col-md-2 col-form-label pt-0">Gender</label>
+                  <div class="col-md-8">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          id="residentsGenderId"
+                          type="radio"
+                          value="male"
+                          formControlName="residentsGender"
+                        />Male
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          id="residentsGenderId"
+                          type="radio"
+                          value="female"
+                          formControlName="residentsGender"
+                        />Female
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row mb-2 d-flex justify-content-center">
+              <div class="col-md-2 d-flex justify-content-center">
+                <button
+                  class="btn btn-outline-primary"
+                  type="button"
+                  (click)="addResidents(i)"
+                >
+                  Add Restidents
+                </button>
+              </div>
+
+              <div class="col-md-2 d-flex justify-content-center">
+                <button
+                  class="btn btn-danger"
+                  type="button"
+                  [disabled]="addresses.length === 1 ? true : false"
+                  (click)="deleteAddress(i)"
+                >
+                  Delete Address
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-
         <div class="form-group row mb-2">
           <div class="col-md-4">
             <button
@@ -391,7 +468,11 @@
                   ? 'Add another mailing address'
                   : 'Disabled until the existing address data is valid'
               "
-              [disabled]="!addresses.valid"
+              [disabled]="
+                addresses.valid && addresses.length === 3
+                  ? addresses.valid
+                  : !addresses.valid
+              "
               (click)="addAddress()"
             >
               Add Another Address

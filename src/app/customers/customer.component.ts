@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Type } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -64,6 +64,11 @@ export class CustomerComponent implements OnInit {
     return this.customerForm.get('addresses') as FormArray;
   }
 
+  getResidents(form: any) {
+    // console.log(form);
+    return form.controls.residents.controls;
+  }
+
   private validationMessages: any = {
     required: 'Please enter your email address.',
     email: 'Please enter a valid email address.',
@@ -95,7 +100,7 @@ export class CustomerComponent implements OnInit {
       sendCatalog: true,
       addresses: this.fb.array([this.buildAddress()]),
     });
-    console.log(this.customerForm.controls['dateGroup']);
+    // console.log(this.customerForm.controls['dateGroup']);
 
     this.customerForm
       .get('notification')
@@ -111,6 +116,12 @@ export class CustomerComponent implements OnInit {
     this.addresses.push(this.buildAddress());
   }
 
+  addResidents(i: number): void {
+    const customer = this.customerForm.get('addresses') as FormArray;
+    const residents = customer.at(i).get('residents') as FormArray;
+    residents.push(this.buildResidents());
+  }
+
   buildAddress(): FormGroup {
     return this.fb.group({
       addressType: 'home',
@@ -119,7 +130,22 @@ export class CustomerComponent implements OnInit {
       city: '',
       state: '',
       zip: '',
+      residents: this.fb.array([this.buildResidents()]),
     });
+  }
+
+  buildResidents(): FormGroup {
+    return this.fb.group({
+      residentsName: '',
+      residentsGender: 'male',
+    });
+  }
+
+  deleteAddress(i: number) {
+    const customer = this.customerForm.get('addresses') as FormArray;
+    // console.log(i);
+    // console.log(this.customerForm.get('addresses'));
+    customer.removeAt(i);
   }
 
   populateTestData(): void {
